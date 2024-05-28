@@ -1,5 +1,7 @@
 # JABI-EVM
 
+[![codecov](https://codecov.io/gh/wkennedy/JABI-EVM/graph/badge.svg?token=9BTRNZ7F17)](https://codecov.io/gh/wkennedy/JABI-EVM)
+
 This is a Java library to decode EVM functions and logs based on an ABI. There are other libraries like this one, just 
 slightly different.
 
