@@ -1,2 +1,2 @@
-rootProject.name = "JABI-EVM"
+rootProject.name = "jabi-evm
 
