@@ -1,7 +1,18 @@
 plugins {
     id("java")
+    `java-library`
     jacoco
     `maven-publish`
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("--enable-preview")
 }
 
 group = "com.github.wkennedy"
