@@ -204,7 +204,7 @@ public class Decoder {
      * @param logs The array of Log objects to decode.
      * @return A list of DecodedLog objects representing the decoded logs.
      */
-    public List<DecodedLog> decodeLogs(Log[] logs) {
+    public List<DecodedLog> decodeLogs(Log... logs) {
         List<DecodedLog> result = new ArrayList<>();
 
         for (Log log : logs) {
