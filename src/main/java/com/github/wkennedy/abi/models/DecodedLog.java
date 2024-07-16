@@ -1,6 +1,8 @@
 package com.github.wkennedy.abi.models;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class DecodedLog {
@@ -46,6 +48,16 @@ public class DecodedLog {
                 .flatMap(eventList ->
                         eventList.stream().filter(event -> event.getName().equals(name)).findFirst())
                 .orElse(null);
+    }
+
+    public Map<String, Param> getEventsMap() {
+        Map<String, Param> eventsMap = new HashMap<>();
+        if (events != null) {
+            for (Param event : events) {
+                eventsMap.put(event.getName(), event);
+            }
+        }
+        return eventsMap;
     }
 
     @Override

@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-  
+import static org.junit.jupiter.api.Assertions.*;
+
 public class DecodedLogTest {
 
     @Test
@@ -26,7 +26,7 @@ public class DecodedLogTest {
     @Test
     void getEventTestEventNotPresent() {
         Param param1 = new Param("event1", "type1", "value1");
-        List<Param> events = Arrays.asList(param1);
+        List<Param> events = List.of(param1);
         
         DecodedLog decodedLog = new DecodedLog("name", "address", events);
         
@@ -42,5 +42,45 @@ public class DecodedLogTest {
         Param foundEvent = decodedLog.getEvent("event1");
         
         assertNull(foundEvent);
+    }
+
+    @Test
+    void getEventsMapTestNoEvents() {
+        DecodedLog decodedLog = new DecodedLog("name", "address", null);
+
+        Map<String, Param> eventsMap = decodedLog.getEventsMap();
+
+        assertTrue(eventsMap.isEmpty());
+    }
+
+    @Test
+    void getEventsMapTestSingleEvent() {
+        Param param1 = new Param("event1", "type1", "value1");
+        List<Param> events = List.of(param1);
+
+        DecodedLog decodedLog = new DecodedLog("name", "address", events);
+
+        Map<String, Param> eventsMap = decodedLog.getEventsMap();
+
+        assertEquals(1, eventsMap.size());
+        assertTrue(eventsMap.containsKey("event1"));
+        assertEquals(param1, eventsMap.get("event1"));
+    }
+
+    @Test
+    void getEventsMapTestMultipleEvents() {
+        Param param1 = new Param("event1", "type1", "value1");
+        Param param2 = new Param("event2", "type2", "value2");
+        List<Param> events = Arrays.asList(param1, param2);
+
+        DecodedLog decodedLog = new DecodedLog("name", "address", events);
+
+        Map<String, Param> eventsMap = decodedLog.getEventsMap();
+
+        assertEquals(2, eventsMap.size());
+        assertTrue(eventsMap.containsKey("event1"));
+        assertTrue(eventsMap.containsKey("event2"));
+        assertEquals(param1, eventsMap.get("event1"));
+        assertEquals(param2, eventsMap.get("event2"));
     }
 }
