@@ -228,6 +228,22 @@ public class Decoder {
         return decodeLogs(logs);
     }
 
+    public static String getFunctionSignature(byte[] data) {
+        byte[] methodBytes = Arrays.copyOf(data, 4);
+        return HEX_PREFIX + Hex.encodeHexString(methodBytes);
+    }
+
+    public static String getFunctionSignature(String data) {
+        String noPrefix = data.replaceFirst(HEX_PREFIX, "");
+        byte[] decodedDataInBytes;
+        try {
+            decodedDataInBytes = Hex.decodeHex(noPrefix.toUpperCase());
+            return getFunctionSignature(decodedDataInBytes);
+        } catch (DecoderException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Log[] fromJson(String data) {
         try {
             return objectMapper.readValue(data, Log[].class);
