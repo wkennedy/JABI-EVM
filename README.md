@@ -5,6 +5,25 @@
 This is a Java library to decode EVM functions and logs based on an ABI. There are other libraries like this one, just 
 slightly different.
 
+Installation
+```xml
+<!--    Add to your pom.xml repositories section-->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+```
+```xml
+<!--    Add the JABI-EVM dependency-->
+    <dependency>
+        <groupId>com.github.wkennedy</groupId>
+        <artifactId>JABI-EVM</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+```
+
 Decoding Functions:
 ```java
     //Get the ABI as JSON (either from a file, web, etc...)
