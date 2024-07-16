@@ -1,6 +1,7 @@
 package com.github.wkennedy.abi.models;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DecodedLog {
     private String name;
@@ -38,6 +39,13 @@ public class DecodedLog {
 
     public void setEvents(List<Param> events) {
         this.events = events;
+    }
+
+    public Param getEvent(String name) {
+        return Optional.ofNullable(events)
+                .flatMap(eventList ->
+                        eventList.stream().filter(event -> event.getName().equals(name)).findFirst())
+                .orElse(null);
     }
 
     @Override
