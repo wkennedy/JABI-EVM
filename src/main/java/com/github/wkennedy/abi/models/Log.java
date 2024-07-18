@@ -1,10 +1,11 @@
 package com.github.wkennedy.abi.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Log {
     private String data;
-    private List<String> topics;
+    private List<String> topics = new ArrayList<>();
     private String address;
 
     public Log() {
@@ -47,5 +48,22 @@ public class Log {
                 ", topics=" + topics +
                 ", address='" + address + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Log log = (Log) o;
+        return data.equals(log.data) && topics.equals(log.topics) && address.equals(log.address);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = data.hashCode();
+        result = 31 * result + topics.hashCode();
+        result = 31 * result + address.hashCode();
+        return result;
     }
 }

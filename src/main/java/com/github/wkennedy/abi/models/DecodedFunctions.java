@@ -2,6 +2,7 @@ package com.github.wkennedy.abi.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class DecodedFunctions {
@@ -62,5 +63,22 @@ public class DecodedFunctions {
                 "name='" + name + '\'' +
                 ", params=" + params +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DecodedFunctions that = (DecodedFunctions) o;
+        return Objects.equals(name, that.name) && Objects.equals(params, that.params) && Objects.equals(nestedDecodedFunctions, that.nestedDecodedFunctions);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(params);
+        result = 31 * result + Objects.hashCode(nestedDecodedFunctions);
+        return result;
     }
 }

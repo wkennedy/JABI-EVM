@@ -1,6 +1,8 @@
 package com.github.wkennedy.abi.models;
 
 import java.util.Arrays;
+import java.util.Objects;
+
 import com.github.wkennedy.util.ByteUtil;
 
 public class Param {
@@ -63,5 +65,23 @@ public class Param {
     public String toDisplayString() {
         String valueString = value == null ? "null" : (value.getClass().isArray() ? Arrays.toString((Object[]) value) : value.toString());
         return this.getClass().getName() + "(name=" + this.name + ", type=" + this.getType() + ", value=" + valueString + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Param param = (Param) o;
+        return Objects.equals(name, param.name) && Objects.equals(type, param.type) && Objects.equals(value, param.value) && Objects.equals(rawValue, param.rawValue);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(type);
+        result = 31 * result + Objects.hashCode(value);
+        result = 31 * result + Objects.hashCode(rawValue);
+        return result;
     }
 }
