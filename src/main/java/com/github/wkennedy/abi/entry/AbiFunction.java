@@ -2,6 +2,7 @@ package com.github.wkennedy.abi.entry;
 
 import com.github.wkennedy.abi.SolidityType;
 import com.github.wkennedy.util.ByteUtil;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -9,10 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.wkennedy.abi.SolidityType.IntType.encodeInt;
+import static com.github.wkennedy.util.Constants.HEX_PREFIX;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
 import static org.apache.commons.lang3.StringUtils.join;
 
+/**
+ * The AbiFunction class represents a function in an ABI (Application Binary Interface)
+ * definition. It extends the AbiEntry class and provides methods for encoding and decoding
+ * function calls.
+ */
 public class AbiFunction extends AbiEntry {
 
     private static final int ENCODED_SIGN_LENGTH = 4;
@@ -66,19 +73,64 @@ public class AbiFunction extends AbiEntry {
         return ByteUtil.merge(encodedArgs);
     }
 
+    /**
+     * Decodes the result of an encoded ABI function call.
+     *
+     * @param encoded the byte array containing the encoded result
+     * @return a List containing the decoded result
+     * @throws RuntimeException if the decoding fails
+     */
     public List<?> decode(byte[] encoded) {
         return AbiParam.decodeList(inputs, subarray(encoded, ENCODED_SIGN_LENGTH, encoded.length));
     }
 
+    /**
+     * Decodes the result of an encoded ABI function call.
+     *
+     * @param encoded the String containing the hex-encoded result
+     * @return a List<?> containing the decoded result
+     * @throws RuntimeException if the decoding fails
+     */
+    public List<?> decodeResult(String encoded) {
+        if(encoded == null || encoded.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        byte[] bytes;
+        try {
+            bytes = org.apache.commons.codec.binary.Hex.decodeHex(encoded.replace(HEX_PREFIX, "").toUpperCase());
+        } catch (DecoderException e) {
+            throw new RuntimeException(e);
+        }
+        return decodeResult(bytes);
+    }
+
+    /**
+     * Decodes the result of an encoded ABI function call.
+     *
+     * @param encoded the byte array containing the encoded result
+     * @return a List containing the decoded result
+     */
     public List<?> decodeResult(byte[] encoded) {
         return AbiParam.decodeList(outputs, encoded);
     }
 
+    /**
+     * Encodes the signature of an AbiFunction.
+     *
+     * @return a byte array containing the encoded signature
+     */
     @Override
     public byte[] encodeSignature() {
         return extractSignature(super.encodeSignature());
     }
 
+    /**
+     * Extracts the signature from a given byte array.
+     *
+     * @param data the byte array to extract the signature from
+     * @return a byte array containing the extracted signature
+     */
     public static byte[] extractSignature(byte[] data) {
         return subarray(data, 0, ENCODED_SIGN_LENGTH);
     }

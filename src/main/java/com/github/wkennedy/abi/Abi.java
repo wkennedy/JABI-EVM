@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * The Abi class represents an Ethereum ABI (Application Binary Interface) definition.
+ * It extends the ArrayList class to provide a list-like behavior for AbiEntry objects.
+ */
 public class Abi extends ArrayList<AbiEntry> {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
@@ -84,6 +88,12 @@ public class Abi extends ArrayList<AbiEntry> {
         return find(AbiConstructor.class, CONSTRUCTOR_TYPE, AbiConstructor.class::isInstance);
     }
 
+
+    /**
+     * The ParamSanitizer class is a converter class that sanitizes the AbiParam objects.
+     * It extends the StdConverter class from the Jackson library.
+     * This class is part of the Abi class and is used to convert AbiParam objects before or after deserialization.
+     */
     public static class ParamSanitizer extends StdConverter<AbiParam, AbiParam> {
         public ParamSanitizer() {
         }

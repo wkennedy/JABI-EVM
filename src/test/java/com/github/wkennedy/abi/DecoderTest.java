@@ -216,6 +216,7 @@ public class DecoderTest {
         DecodedFunctions decodedFunctionCalls = decoder.decodeFunction(inputData);
         decodedFunctionCalls.getName();
     }
+
     @Test
     void padZerosWithAddressOfCorrectLength() {
         String address = "0x0123456789abcdef0123456789abcdef01234567";
