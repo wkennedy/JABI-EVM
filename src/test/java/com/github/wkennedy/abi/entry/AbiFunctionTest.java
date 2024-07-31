@@ -76,6 +76,21 @@ class AbiFunctionTest {
     }
 
     @Test
+    public void testUniswapFunctionEncode() throws IOException, DecoderException {
+        String abiJson = new String(Files.readAllBytes(Paths.get("./src/test/resources/uniswap_abi.json")));
+        Decoder decoder = new Decoder();
+        decoder.addAbi("0x731847de5b19b26039f283826ae5218ac7e070ed1b7fff689c2253a3035d8bd6", abiJson);
+        Predicate<AbiFunction> exists = fn -> fn.name.equals("getAmountsOut");
+        BigInteger amountIn = new BigInteger("1000000000000000000");
+        String[] path = {"0x0000000000000000000000000000456E65726779", "0x45429A2255e7248e57fce99E7239aED3f84B7a53"};
+
+        Optional<AbiFunction> function = decoder.getAbis().get("0x731847de5b19b26039f283826ae5218ac7e070ed1b7fff689c2253a3035d8bd6").findFunction(exists);
+        String encodeToHex = function.get().encodeToHex(amountIn, path);
+        assertNotNull(encodeToHex);
+        assertEquals("0xd06ca61f0000000000000000000000000000000000000000000000000de0b6b3a7640000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000456e6572677900000000000000000000000045429a2255e7248e57fce99e7239aed3f84b7a53", encodeToHex);
+    }
+
+    @Test
     void encode_withValidArgs_shouldReturnBytes() {
         AbiFunction testedAbiFunction = new AbiFunction(
                 true, "test", Collections.singletonList(new AbiParam(false, "param",  new SolidityType.IntType("int"))), Collections.emptyList(), true);

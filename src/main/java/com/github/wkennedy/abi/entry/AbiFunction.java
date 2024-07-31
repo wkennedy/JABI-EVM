@@ -3,10 +3,12 @@ package com.github.wkennedy.abi.entry;
 import com.github.wkennedy.abi.SolidityType;
 import com.github.wkennedy.util.ByteUtil;
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.github.wkennedy.abi.SolidityType.IntType.encodeInt;
@@ -28,8 +30,25 @@ public class AbiFunction extends AbiEntry {
         super(null, constant, name, inputs, outputs, AbiType.function, payable);
     }
 
+    /**
+     * Encodes the given arguments into a byte array by merging the encoded signature and encoded arguments.
+     *
+     * @param args The arguments to encode.
+     * @return The encoded byte array.
+     */
     public byte[] encode(Object... args) {
         return ByteUtil.merge(encodeSignature(), encodeArguments(args));
+    }
+
+    /**
+     * Encodes the given arguments into a hexadecimal string by merging the encoded signature and encoded arguments.
+     *
+     * @param args The arguments to encode.
+     * @return The encoded hexadecimal string.
+     */
+    public String encodeToHex(Object... args) {
+        byte[] methodBytes = encode(args);
+        return HEX_PREFIX + Hex.encodeHexString(methodBytes);
     }
 
     private ImmutablePair<Integer, Integer> computeStaticSizeAndDynamicParams(Object... args) {
