@@ -22,6 +22,11 @@ public abstract class SolidityType {
     private final static int Int32Size = 32;
     protected String name;
 
+    /**
+     * Constructs a SolidityType with the specified name.
+     *
+     * @param name the name of the SolidityType
+     */
     public SolidityType(String name) {
         this.name = name;
     }
@@ -42,12 +47,20 @@ public abstract class SolidityType {
         return getName();
     }
 
+    /**
+     * TypeFactory is an abstract class that represents a factory for creating SolidityTypes.
+     * It provides methods for getting a SolidityType based on a typeName and checking if a typeName matches any of the factory's types.
+     */
     public static abstract class TypeFactory {
         public abstract SolidityType getType(String typeName);
 
         public abstract boolean matches(String typeName);
     }
 
+    /**
+     * BoolTypeFactory is a factory for creating BoolType objects and matching the input string with the "bool" type.
+     * It extends the TypeFactory class.
+     */
     public static class BoolTypeFactory extends TypeFactory {
         @Override
         public SolidityType getType(String typeName) {
@@ -60,6 +73,9 @@ public abstract class SolidityType {
         }
     }
 
+    /**
+     * IntTypeFactory is a subclass of TypeFactory that provides methods for creating IntType objects and checking if a typeName matches any of the factory's types.
+     */
     public static class IntTypeFactory extends TypeFactory {
         @Override
         public SolidityType getType(String typeName) {
@@ -72,6 +88,11 @@ public abstract class SolidityType {
         }
     }
 
+    /**
+     * ArrayTypeFactory is a concrete implementation of the TypeFactory abstract class.
+     * It is responsible for creating ArrayType instances based on the given typeName
+     * and checking if a typeName matches any of the factory's types.
+     */
     public static class ArrayTypeFactory extends TypeFactory {
         @Override
         public SolidityType getType(String typeName) {
@@ -84,6 +105,10 @@ public abstract class SolidityType {
         }
     }
 
+    /**
+     * UnsignedIntTypeFactory is a factory class that creates UnsignedIntType objects.
+     * It extends the abstract class TypeFactory.
+     */
     public static class UnsignedIntTypeFactory extends TypeFactory {
         @Override
         public SolidityType getType(String typeName) {
@@ -92,10 +117,13 @@ public abstract class SolidityType {
 
         @Override
         public boolean matches(String typeName) {
-            return typeName.startsWith("uint") || typeName.startsWith("wad") || typeName.startsWith("ray");
+            return (typeName.startsWith("uint") || typeName.startsWith("wad") || typeName.startsWith("ray")) && !typeName.endsWith("]");
         }
     }
 
+    /**
+     * AddressTypeFactory is a factory class for creating SolidityType instances of address type.
+     */
     public static class AddressTypeFactory extends TypeFactory {
         @Override
         public SolidityType getType(String typeName) {
@@ -108,6 +136,10 @@ public abstract class SolidityType {
         }
     }
 
+    /**
+     * StringTypeFactory is a concrete implementation of the TypeFactory abstract class.
+     * It represents a factory for creating StringType instances.
+     */
     public static class StringTypeFactory extends TypeFactory {
         @Override
         public SolidityType getType(String typeName) {
@@ -169,8 +201,8 @@ public abstract class SolidityType {
     }
 
     private static final List<TypeFactory> typeFactories = Arrays.asList(
-            new BoolTypeFactory(), new IntTypeFactory(), new StringTypeFactory(), new Bytes32TypeFactory(), new BytesTypeFactory(),
-            new FunctionTypeFactory(), new AddressTypeFactory(), new UnsignedIntTypeFactory(), new ArrayTypeFactory(), new TupleTypeFactory()
+            new ArrayTypeFactory(), new BoolTypeFactory(), new IntTypeFactory(), new StringTypeFactory(), new Bytes32TypeFactory(), new BytesTypeFactory(),
+            new FunctionTypeFactory(), new AddressTypeFactory(), new UnsignedIntTypeFactory(), new TupleTypeFactory()
     );
 
     @JsonCreator

@@ -1,4 +1,5 @@
 package com.github.wkennedy.abi;
+
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -153,4 +154,11 @@ public class SolidityTypeTest {
         byte[] encoded = new byte[0];
         assertThrows(RuntimeException.class, () -> bytesType.decode(encoded, 100));
     }
+
+    @Test
+    public void testUintArrayMatches() {
+        SolidityType type = SolidityType.getType("uint256[]");
+        assertTrue(type.isDynamicType());
+    }
+
 }

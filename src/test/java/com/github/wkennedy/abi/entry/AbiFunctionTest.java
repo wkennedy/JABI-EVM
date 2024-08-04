@@ -64,10 +64,10 @@ class AbiFunctionTest {
 
     @Test
     public void testUniswapFunctionDecode() throws IOException, DecoderException {
-        String abiJson = new String(Files.readAllBytes(Paths.get("./src/test/resources/uniswap_abi.json")));
+        String abiJson = new String(Files.readAllBytes(Paths.get("./src/test/resources/erc20_abi.json")));
         Decoder decoder = new Decoder();
         decoder.addAbi("0x731847de5b19b26039f283826ae5218ac7e070ed1b7fff689c2253a3035d8bd6", abiJson);
-        Predicate<AbiFunction> exists = fn -> fn.name.equals("getAmountsOut");
+        Predicate<AbiFunction> exists = fn -> fn.name.equals("decimals");
         Optional<AbiFunction> function = decoder.getAbis().get("0x731847de5b19b26039f283826ae5218ac7e070ed1b7fff689c2253a3035d8bd6").findFunction(exists);
         byte[] bytes = org.apache.commons.codec.binary.Hex.decodeHex("0x0000000000000000000000000000000000000000000000000000000000000012".replace(HEX_PREFIX, "").toUpperCase());
         List<?> decode = function.get().decodeResult(bytes);
@@ -112,5 +112,18 @@ class AbiFunctionTest {
         byte[] result = testedAbiFunction.encode();
         assertNotNull(result);
         assertEquals(4, result.length);
+    }
+
+    @Test
+    void decode_functionResult_DynamicArray() {
+        String functionResult = "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000016345785d8a0000000000000000000000000000000000000000000000000000001e3503a1bb2d22";
+        AbiFunction testedAbiFunction = new AbiFunction(
+                true, "test", Collections.emptyList(), Collections.singletonList(new AbiParam(false, "param",  new SolidityType.DynamicArrayType("uint256[]"))), true);
+        List<?> objects = testedAbiFunction.decodeResult(functionResult);
+        assertNotNull(objects);
+        assertEquals(1, objects.size());
+        Object[] amounts = (Object[]) objects.getFirst();
+        assertEquals(BigInteger.valueOf(100000000000000000L), amounts[0]);
+        assertEquals(BigInteger.valueOf(8502539015892258L), amounts[1]);
     }
 }
